@@ -5,22 +5,46 @@
  * ALL right reserved.See COPYRIGHT for detailed Information.
  *
  * @File:       Fun_OSPLCalcu.m
- * @Brief:      计算总声压级
+ * @Brief:      分别计算[全部频段]和[10Hz-1000Hz]的总声压级
  * 
- * @Input:      TimeDomain_Data                 【时域】数据                          N×1数组
- *              TimeDomain_Data_SamplingNum     【时域】采样点数                      double
- *              TimeDomain_Data_SamplingFre     【时域】采样频率                      double
+ * @Input:      Struct_Case                     工况对应的结构体                   Struct
  * 
- * @Output:     SingleSide_FreAxis              【单边频谱】频率坐标                  (N/2+1)×1数组
- *              FreDomain_Amp                   【单边频谱】幅值                      (N/2+1)×1数组
+ * @Output:     Struct_Case                     工况对应的结构体                   Struct
  * 
  * @Author:     Haiger
- * @date:       2023.05.09
+ * @date:       2023.06.04
  *------------------------------------------------------------------------------------------
 %}
 
-function OSPL = Fun_OSPLCalcu(FreDomain_Amp)
-linear_values = 10.^(FreDomain_Amp / 10);               % 转换为线性值
-total_energy = sum(linear_values);                      % 计算总能量
-OSPL = 10 * log10(total_energy);                        % 转换回对数值(dB)
+function Struct_Case = Fun_OSPLCalcu(Struct_Case)
+
+% 整个频段[OSPL]
+% 未加窗的数据
+Linear_Values = 10.^(Struct_Case.FrameFre.Frame_Fre_All(:, 4) / 10);                                                        % 转换为线性值
+Total_Energy = sum(Linear_Values);
+Struct_Case.OSPL.OSPLALL = 10 * log10(Total_Energy);                                                                        % 全部频段的OSPL
+
+% 加窗的数据
+Linear_Values_Window = 10.^(Struct_Case.FrameFre.Frame_Window_Fre_All(:, 4) / 10);                                          % 转换为线性值
+Total_Energy_Window = sum(Linear_Values_Window);
+Struct_Case.OSPL.OSPLALL_Window = 10 * log10(Total_Energy_Window);                                                          % 全部频段的OSPL
+
+% 频段10Hz~1000Hz[OSPL]
+% 未加窗的数据
+% 因计算得到的频率是浮点数，接近整数，例如10Hz(9.9999999Hz)，故这儿使用9.99作为逻辑判断值
+Struct_Case.FrameFre.Frame_Fre_PartialIndex = (Struct_Case.FrameFre.Frame_Fre_All(:, 1) >= 9.99) & (Struct_Case.FrameFre.Frame_Fre_All(:, 1) <= 1000); % 筛选出频率在10Hz~1000Hz范围内的索引
+Struct_Case.FrameFre.Frame_Fre_Partial = Struct_Case.FrameFre.Frame_Fre_All(Struct_Case.FrameFre.Frame_Fre_PartialIndex, :);                           % 得到10Hz~1000Hz频段的计算结果
+
+Linear_Values_Partial = 10.^(Struct_Case.FrameFre.Frame_Fre_Partial(:, 4) / 10);                                            % 转换为线性值
+Total_Energy_Partial = sum(Linear_Values_Partial);
+Struct_Case.OSPL.OSPLPartial = 10 * log10(Total_Energy_Partial);                                                            % 部分频段10Hz~1000Hz的OSPL
+
+% 加窗的数据
+Struct_Case.FrameFre.Frame_Window_Fre_PartialIndex = (Struct_Case.FrameFre.Frame_Window_Fre_All(:, 1) >= 9.99) & (Struct_Case.FrameFre.Frame_Window_Fre_All(:, 1) <= 1000);    % 筛选出频率在10Hz~1000Hz范围内的索引
+Struct_Case.FrameFre.Frame_Window_Fre_Partial = Struct_Case.FrameFre.Frame_Window_Fre_All(Struct_Case.FrameFre.Frame_Window_Fre_PartialIndex, :);                              % 得到10Hz~1000Hz频段的计算结果
+
+Linear_Values_Window_Partial = 10.^(Struct_Case.FrameFre.Frame_Window_Fre_Partial(:, 4) / 10);                              % 转换为线性值
+Total_Energy_Window_Partial = sum(Linear_Values_Window_Partial);
+Struct_Case.OSPL.OSPLPartial_Window = 10 * log10(Total_Energy_Window_Partial);                                              % 部分频段10Hz~1000Hz的OSPL
+
 end
