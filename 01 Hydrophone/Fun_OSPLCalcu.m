@@ -32,7 +32,7 @@ Struct_Case.OSPL.OSPLALL_Window = 10 * log10(Total_Energy_Window);              
 % 频段10Hz~1000Hz[OSPL]
 % 未加窗的数据
 % 因计算得到的频率是浮点数，接近整数，例如10Hz(9.9999999Hz)，故这儿使用9.99作为逻辑判断值
-Struct_Case.FrameFre.Frame_Fre_PartialIndex = (Struct_Case.FrameFre.Frame_Fre_All(:, 1) >= 9.99) & (Struct_Case.FrameFre.Frame_Fre_All(:, 1) <= 1000); % 筛选出频率在10Hz~1000Hz范围内的索引
+Struct_Case.FrameFre.Frame_Fre_PartialIndex = (Struct_Case.FrameFre.Frame_Fre_All(:, 1) >= 9.99) & (Struct_Case.FrameFre.Frame_Fre_All(:, 1) <= 1000.01); % 筛选出频率在10Hz~1000Hz范围内的索引
 Struct_Case.FrameFre.Frame_Fre_Partial = Struct_Case.FrameFre.Frame_Fre_All(Struct_Case.FrameFre.Frame_Fre_PartialIndex, :);                           % 得到10Hz~1000Hz频段的计算结果
 
 Linear_Values_Partial = 10.^(Struct_Case.FrameFre.Frame_Fre_Partial(:, 4) / 10);                                            % 转换为线性值
@@ -40,7 +40,7 @@ Total_Energy_Partial = sum(Linear_Values_Partial);
 Struct_Case.OSPL.OSPLPartial = 10 * log10(Total_Energy_Partial);                                                            % 部分频段10Hz~1000Hz的OSPL
 
 % 加窗的数据
-Struct_Case.FrameFre.Frame_Window_Fre_PartialIndex = (Struct_Case.FrameFre.Frame_Window_Fre_All(:, 1) >= 9.99) & (Struct_Case.FrameFre.Frame_Window_Fre_All(:, 1) <= 1000);    % 筛选出频率在10Hz~1000Hz范围内的索引
+Struct_Case.FrameFre.Frame_Window_Fre_PartialIndex = (Struct_Case.FrameFre.Frame_Window_Fre_All(:, 1) >= 9.99) & (Struct_Case.FrameFre.Frame_Window_Fre_All(:, 1) <= 1000.01);    % 筛选出频率在10Hz~1000Hz范围内的索引
 Struct_Case.FrameFre.Frame_Window_Fre_Partial = Struct_Case.FrameFre.Frame_Window_Fre_All(Struct_Case.FrameFre.Frame_Window_Fre_PartialIndex, :);                              % 得到10Hz~1000Hz频段的计算结果
 
 Linear_Values_Window_Partial = 10.^(Struct_Case.FrameFre.Frame_Window_Fre_Partial(:, 4) / 10);                              % 转换为线性值

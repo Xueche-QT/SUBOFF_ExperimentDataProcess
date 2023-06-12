@@ -253,7 +253,7 @@ Struct_Case.OSPL.OSPLPartial_Window = 10 * log10(Total_Energy_Window_Partial);  
     中心频率范围为1~100kHz
 %}
 
-Struct_Case.Octave.End_Fre = 100000.0;                                                                  % 结束频率(Hz)
+Struct_Case.Octave.End_Fre = 1000.0;                                                                    % 结束频率(Hz)
 Struct_Case.Octave.Base = 10;                                                                           % 基数
 Struct_Case.Octave.Factor = 2^(1/3);                                                                    % 三分之一倍频程因子
 

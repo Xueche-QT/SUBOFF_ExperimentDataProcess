@@ -23,7 +23,7 @@
 function Struct_Case = Fun_OneThirdOctave(Struct_Case)
 
 %% 求取三分之一倍频程的频带[Octave]
-Struct_Case.Octave.End_Fre = 100000.0;                                                                  % 结束频率(Hz)
+Struct_Case.Octave.End_Fre = 1000.0;                                                                  % 结束频率(Hz)
 Struct_Case.Octave.Base = 10;                                                                           % 基数
 Struct_Case.Octave.Factor = 2^(1/3);                                                                    % 三分之一倍频程因子
 
